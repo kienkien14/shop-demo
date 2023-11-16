@@ -39,6 +39,9 @@ const ProductList = Loadable(lazy(() => import('../pages/sim/product/ProductList
 const ProductCreate = Loadable(lazy(() => import('../pages/sim/product/ProductCreate')));
 const BillList = Loadable(lazy(() => import('../pages/sim/bill/BillList')));
 const BillCreate = Loadable(lazy(() => import('../pages/sim/bill/BillCreate')));
+const BillDetail = Loadable(lazy(() => import('../pages/sim/bill/BillDetail')));
+const BillItemList = Loadable(lazy(() => import('../pages/sim/billItem/BillItemList')));
+const BillItemCreate = Loadable(lazy(() => import('../pages/sim/billItem/BillItemCreate')));
 const UserList = Loadable(lazy(() => import('../pages/sim/user/UserList')));
 const MediaUserCreate = Loadable(lazy(() => import('../pages/sim/user/MediaUserCreate')));
 const UserEdit = Loadable(lazy(() => import('../pages/sim/user/UserEdit')));
@@ -66,8 +69,14 @@ const simsRoute = {
 
     { path: 'bills', element: <BillList /> },
     { path: 'bill/new', element: <BillCreate /> },
+    { path: 'bill/:id/detail', element: <BillDetail /> },
     { path: 'bill/:id/view', element: <BillCreate /> },
     { path: 'bill/:id/edit', element: <BillCreate /> },
+
+    { path: 'billItems', element: <BillItemList /> },
+    { path: 'billItem/new', element: <BillItemCreate /> },
+    { path: 'billItem/:id/view', element: <BillItemCreate /> },
+    { path: 'billItem/:id/edit', element: <BillItemCreate /> },
 
     // user
     { path: 'users', element: <UserList /> },

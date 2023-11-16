@@ -37,6 +37,9 @@ export const PATH_DASHBOARD = {
     newBill: path(ROOTS_DASHBOARD, '/sims/bill/new'),
     bills: path(ROOTS_DASHBOARD, '/sims/bills'),
 
+    newBillItem: path(ROOTS_DASHBOARD, '/sims/billItem/new'),
+    billItems: path(ROOTS_DASHBOARD, '/sims/billItems'),
+
     newUser: path(ROOTS_DASHBOARD, '/sims/user/new'),
     users: path(ROOTS_DASHBOARD, '/sims/users'),
 

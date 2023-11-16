@@ -51,7 +51,6 @@ export default function CategoryNewForm({ isEdit, isView, currentItem }) {
     }),
     [currentItem]
   );
-
   const methods = useForm({
     resolver: yupResolver(NewItemSchema),
     defaultValues,

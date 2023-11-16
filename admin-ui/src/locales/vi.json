@@ -260,13 +260,23 @@
       "email": "Email",
       "description": "Mô tả sản phẩm",
       "roles": "Vai trò",
-      "productName": "Tên sản phẩm",
-      "productPrice": "Giá sản phẩm",
-      "categoryName": "Tên danh mục",
       "quantity": "Số lượng",
-      "price": "Giá tiền",
+      "price": "Tổng hóa đơn",
       "listBill": "Danh sách hóa đơn",
       "newBill": "Tạo mới hóa đơn",
+      "createdAt": "Ngày tạo"
+    },
+    "billItem": {
+      "view": "Chi tiết",
+      "id": "ID",
+      "name": "Tên người tạo",
+      "email": "Email",
+      "description": "Mô tả sản phẩm",
+      "roles": "Vai trò",
+      "quantity": "Số lượng",
+      "price": "Giá",
+      "listBillItem": "Danh sách hóa đơn",
+      "newBillItem": "Tạo mới hóa đơn",
       "createdAt": "Ngày tạo"
     },
     "email": {

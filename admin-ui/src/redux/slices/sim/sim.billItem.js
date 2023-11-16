@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { findBillsAPI, getBillByIdAPI } from '../../../service/sim/bill.service';
+import { findBillItemsAPI, getBillItemByIdAPI } from '../../../service/sim/billItem.service';
 // utils
 
 const initialState = {
@@ -8,8 +8,8 @@ const initialState = {
   totalElements: 0,
   totalPages: 0,
   numberOfElements: 0,
-  bills: [],
-  bill: null,
+  billItems: [],
+  billItem: null,
   search: {
     keyword: "",
     currentPage: 0,
@@ -18,7 +18,7 @@ const initialState = {
 };
 
 const slice = createSlice({
-  name: 'bill',
+  name: 'billItem',
   initialState,
   reducers: {
     startLoading(state) {
@@ -29,20 +29,20 @@ const slice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    setBills(state, action) {
+    setBillItems(state, action) {
       state.isLoading = false;
       const response = action.payload;
-      state.bills = response.contents;
+      state.billItems = response.contents;
       state.totalElements = response.totalElements;
       state.totalPages = response.totalPages;
       state.numberOfElements = response.numberOfElements;
     },
-    setBill(state, action) {
+    setBillItem(state, action) {
       state.isLoading = false;
       const response = action.payload;
-      state.bill = response.contents;
+      state.billItem = response.contents;
     },
-    setBillSearch(state, action) {
+    setBillItemSearch(state, action) {
       state.isLoading = false;
       state.search = action.payload;
     }
@@ -52,29 +52,29 @@ const slice = createSlice({
 // Reducer
 export default slice.reducer;
 // Actions
-export const { setBillSearch } = slice.actions
+export const { setBillItemSearch } = slice.actions
 // ----------------------------------------------------------------------
 
-export function getBills() {
+export function getBillItems() {
   return async (dispatch, getState) => {
     dispatch(slice.actions.startLoading());
     // read state from rootReducer
-    const { bill } = getState()
-    const resp = await findBillsAPI({ ...bill.search, keyword: `${bill.search.keyword}` });
+    const { billItem } = getState()
+    const resp = await findBillItemsAPI({ ...billItem.search, keyword: `${billItem.search.keyword}` });
     if (resp.code === '200')
-      dispatch(slice.actions.setBills(resp));
+      dispatch(slice.actions.setBillItems(resp));
     else
       dispatch(slice.actions.hasError(resp));
   };
 }
 
-export function getBill(id) {
+export function getBillItem(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
 
-    const resp = await getBillByIdAPI(id);
+    const resp = await getBillItemByIdAPI(id);
     if (resp.code === '200')
-      dispatch(slice.actions.setBill(resp));
+      dispatch(slice.actions.setBillItem(resp));
     else
       dispatch(slice.actions.hasError(resp));
   };

@@ -32,7 +32,7 @@ export default function MediaUserEdit() {
 
   const { users, error } = useSelector((state) => state.mediaUser);
   const mediaUser = users.find(c => c.id === parseInt(id, 10));
-
+  console.log(mediaUser)
   return (
     <Page title={mediaUser?.name}>
       <Container maxWidth={themeStretch ? false : 'lg'}>

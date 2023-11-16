@@ -40,6 +40,7 @@ export default function MediaCategoryList() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { categories, totalElements, numberOfElements, search, error } = useSelector((state) => state.category);
+  console.log(categories)
   const [selected, setSelected] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedId, setSelectedId] = useState();
@@ -243,13 +244,6 @@ export default function MediaCategoryList() {
 
                         {TABLE_HEAD.map(head => {
                           if (checkedColumns.indexOf(head.label) === -1) return null;
-
-                          // if (head.id === 'name')
-                          //   return <TableCell sx={{ display: 'flex', alignItems: 'center' }} key={head.id}>
-                          //     <Typography variant="subtitle2" noWrap>
-                          //       {row[head.id]}
-                          //     </Typography>
-                          //   </TableCell>;
 
                           if (head.id === '')
                             return (

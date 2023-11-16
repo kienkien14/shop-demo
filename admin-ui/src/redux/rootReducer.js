@@ -17,6 +17,7 @@ import userOrderReducer from './slices/sim/sim.user-order';
 import postCategoryReducer from './slices/sim/sim.postCategory';
 import productReducer from './slices/sim/sim.product';
 import billReducer from './slices/sim/sim.bill';
+import billItemReducer from './slices/sim/sim.billItem';
 import staffOrderReducer from './slices/sim/sim.staff-order';
 import reportReducer from './slices/sim/sim.report';
 // ----------------------------------------------------------------------
@@ -42,6 +43,7 @@ const rootReducer = combineReducers({
   postCategory: persistReducer({ ...rootPersistConfig, key: 'sim-post-category' }, postCategoryReducer),
   product: persistReducer({ ...rootPersistConfig, key: 'sim-product' }, productReducer),
   bill: persistReducer({ ...rootPersistConfig, key: 'sim-bill' }, billReducer),
+  billItem: persistReducer({ ...rootPersistConfig, key: 'sim-billItem' }, billItemReducer),
   mediaUser: persistReducer({ ...rootPersistConfig, key: 'sim-user' }, mediaUserReducer),
   mediaRole: persistReducer({ ...rootPersistConfig, key: 'sim-role' }, mediaRoleReducer),
   mediaPrivilege: persistReducer({ ...rootPersistConfig, key: 'sim-privilege' }, mediaPrivilegeReducer),

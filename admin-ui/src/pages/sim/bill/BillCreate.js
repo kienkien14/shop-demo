@@ -25,7 +25,7 @@ export default function BillCreate() {
   const isView = pathname.includes('view');
   const isNew = !isEdit && !isView;
   const { error, bills } = useSelector((state) => state.bill);
-
+  console.log(bills)
   const bill = bills.find((t) => t.id === parseInt(id, 10));
   return (
     <Page title={isNew ? translate('sim.bill.newBill') : bill?.title}>

@@ -12,27 +12,25 @@ import ErrorOccur from '../../../components/ErrorOccur';
 import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
 import Page from '../../../components/Page';
 import useLocales from '../../../hooks/useLocales';
-import RoleNewForm from '../../../sections/sim/role/RoleNewForm';
+import BillItemNewForm from '../../../sections/sim/billItem/BillItemNewForm';
 
 // ----------------------------------------------------------------------
 
-export default function MediaRoleCreate() {
+export default function BillItemCreate() {
   const { themeStretch } = useSettings();
-  const { translate } = useLocales();
   const { pathname } = useLocation();
+  const { translate } = useLocales();
   const { id } = useParams();
   const isEdit = pathname.includes('edit');
   const isView = pathname.includes('view');
   const isNew = !isEdit && !isView;
-  const { error, roles } = useSelector((state) => state.mediaRole);
-
-  const role = roles.find(c => c.id === parseInt(id, 10));
-
+  const { error, billItems } = useSelector((state) => state.billItem);
+  const billItem = billItems.find((t) => t.id === parseInt(id, 10));
   return (
-    <Page title={isNew ? translate('media.role.newRole') : role?.role}>
+    <Page title={isNew ? translate('sim.billItem.newBillItem') : billItem?.title}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={isNew ? translate('media.role.newRole') : role?.role}
+          heading={isNew ? translate('sim.billItem.newBillItem') : billItem?.title}
           links={[
             { name: translate('menu.dashboard'), href: PATH_DASHBOARD.root },
             {
@@ -40,19 +38,19 @@ export default function MediaRoleCreate() {
               href: PATH_DASHBOARD.sim.root,
             },
             {
-              name: translate('menu.role'),
-              href: PATH_DASHBOARD.sim.roles,
+              name: translate('menu.billItem'),
+              href: PATH_DASHBOARD.sim.billItems,
             },
-            { name: isNew ? translate('media.role.newRole') : role?.role || '' },
+            { name: isNew ? translate('sim.billItem.newBillItem') : billItem?.title || '' },
           ]}
         />
         {error && (isEdit || isView) ? (
           <Box sx={{ py: 3 }}>
             <ErrorOccur error={error} />
           </Box>
-        ) :
-          <RoleNewForm isEdit={isEdit} isView={isView} currentRole={!isNew ? role : null} />
-        }
+        ) : (
+          <BillItemNewForm isEdit={isEdit} currentItem={isEdit || isView ? billItem : null} isView={isView} />
+        )}
       </Container>
     </Page>
   );

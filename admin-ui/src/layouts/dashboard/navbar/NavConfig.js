@@ -46,6 +46,7 @@ const navConfig = [
           { title: 'menu.category', path: PATH_DASHBOARD.sim.categories },
           { title: 'menu.products', path: PATH_DASHBOARD.sim.products },
           { title: 'menu.bill', path: PATH_DASHBOARD.sim.bills },
+          // { title: 'menu.billItem', path: PATH_DASHBOARD.sim.billItems },
         ],
       },
 

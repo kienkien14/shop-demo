@@ -17,13 +17,13 @@ import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFTextField } from '../../../components/hook-form';
 import useAuth from '../../../hooks/useAuth';
 import { getProducts, setProductSearch } from '../../../redux/slices/sim/sim.product';
-import { getMediaUsers, setMediaUserSearch } from '../../../redux/slices/sim/sim.user';
 import { dispatch, useSelector } from '../../../redux/store';
-import { createBillAPI, updateBillAPI } from '../../../service/sim/bill.service';
+import { createBillItemAPI, updateBillItemAPI } from '../../../service/sim/billItem.service';
+import { getCategories, setCategorySearch } from '../../../redux/slices/sim/sim.category';
 
 // ----------------------------------------------------------------------
 
-BillNewForm.propTypes = {
+BillItemNewForm.propTypes = {
   isEdit: PropTypes.bool,
   isView: PropTypes.bool,
   currentItem: PropTypes.object,
@@ -36,27 +36,28 @@ const useCurrentRole = () => {
   return user?.role?.name;
 };
 
-export default function BillNewForm({ isEdit, isView, currentItem }) {
+export default function BillItemNewForm({ isEdit, isView, currentItem }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { translate } = useLocales();
   const currentRole = useCurrentRole();
 
-  const { users, search: searchUser, isLoading: isLoadingUser } = useSelector((state) => state.mediaUser);
+  const { categories, search: searchCategory, isLoading: isLoadingCategory } = useSelector((state) => state.category);
   const { products, search: searchProduct, isLoading: isLoadingProduct } = useSelector((state) => state.product);
-
   const NewItemSchema = Yup.object().shape({
-    user: Yup.object().required(translate('validation.required')),
     product: Yup.object().required(translate('validation.required')),
+    categories: Yup.object().required(translate('validation.required')),
     quantity: Yup.number().required(translate('validation.required')),
+    price: Yup.number().required(translate('validation.required')),
   });
 
   const defaultValues = useMemo(
     () => ({
       id: currentItem?.id || '',
-      user: currentItem?.user?.id || '',
-      product: currentItem?.product?.id || '',
+      product: currentItem?.product || '',
+      categories: currentItem?.category || '',
       quantity: currentItem?.quantity || '',
+      price: currentItem?.price || '',
     }),
     [currentItem]
   );
@@ -76,38 +77,30 @@ export default function BillNewForm({ isEdit, isView, currentItem }) {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      dispatch(getMediaUsers());
+      dispatch(getCategories());
       dispatch(getProducts());
     }, 500);
     return () => clearTimeout(timeout);
-  }, [searchUser, searchProduct]);
+  }, [searchCategory, searchProduct]);
 
-  const handleFilterTitleUser = (value) => {
-    dispatch(setMediaUserSearch({ ...searchUser, value }));
+  const handleFilterTitleCategory = (value) => {
+    dispatch(setCategorySearch({ ...searchCategory, value }));
   };
 
   const handleFilterTitleProduct = (value) => {
     dispatch(setProductSearch({ ...searchProduct, value }));
   };
 
-  const onSubmit = async () => {
-    const { user, product, quantity,id } = methods.getValues();
-    const createBill = {
-      user: { id: user.id },
-      billItems: [{ product: { id: product.id }, quantity }]
-    };
-    const updateBill = {
-      user: { id: user.id },
-      billItems: [{ id, product: { id: product.id }, quantity }]
-    };
+  const onSubmit = async (data) => {
+   
     let resp;
-    if (isEdit) resp = await updateBillAPI(updateBill);
-    else resp = await createBillAPI(createBill);
+    if (isEdit) resp = await updateBillItemAPI(data);
+    else resp = await createBillItemAPI(data);
 
     if (resp.status === 200) {
       reset();
       enqueueSnackbar(!isEdit ? translate('message.createSuccess') : translate('message.updateSuccess'));
-      navigate(PATH_DASHBOARD.sim.bills);
+      navigate(PATH_DASHBOARD.sim.billItems);
     } else enqueueSnackbar(`${resp.status} - ${resp.msg}`, { variant: 'error' });
   };
 
@@ -119,19 +112,19 @@ export default function BillNewForm({ isEdit, isView, currentItem }) {
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
                 <Controller
-                  name="user"
+                  name="category"
                   control={control}
                   render={({ field, fieldState: { error } }) => (
                     <Autocomplete
                       disabled={isView}
                       {...field}
                       onChange={(event, newValue) => field.onChange(newValue)}
-                      options={users.map(({ id, name }) => ({ id, name }))}
+                      options={categories.map(({ id, name }) => ({ id, name }))}
                       getOptionLabel={(option) => option.name}
                       isOptionEqualToValue={(option, value) => option.id === value.id}
-                      loading={isLoadingUser}
+                      loading={isLoadingCategory}
                       onInputChange={(event, value) => {
-                        handleFilterTitleUser(value);
+                        handleFilterTitleCategory(value);
                       }}
                       renderItems={(value, getItemProps) =>
                         value.map((option, index) => (
@@ -139,7 +132,7 @@ export default function BillNewForm({ isEdit, isView, currentItem }) {
                         ))
                       }
                       renderInput={(params) => (
-                        <TextField label={translate('media.user.name')} {...params} error={!!error} helperText={error?.message} />
+                        <TextField label={translate('media.category.name')} {...params} error={!!error} helperText={error?.message} />
                       )}
                     />
                   )}
@@ -170,12 +163,13 @@ export default function BillNewForm({ isEdit, isView, currentItem }) {
                     />
                   )}
                 />
-                <RHFTextField name="quantity" label={translate('sim.bill.quantity')} disabled={isView} />
+                <RHFTextField name="quantity" label={translate('sim.billItem.quantity')} disabled={isView} />
+                <RHFTextField name="price" label={translate('sim.billItem.price')} disabled={isView} />
                 {isView ? (
                   <Button
                     variant="contained"
                     component={RouterLink}
-                    to={`${PATH_DASHBOARD.sim.root}/bill/${currentItem?.id}/edit`}
+                    to={`${PATH_DASHBOARD.sim.root}/billItem/${currentItem?.id}/edit`}
                     size="large"
                     startIcon={<Iconify icon={'eva:edit-fill'} />}
                   >

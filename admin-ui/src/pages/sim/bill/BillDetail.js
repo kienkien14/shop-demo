@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useParams } from 'react-router-dom';
 // @mui
 import {
   Avatar,
@@ -43,16 +43,20 @@ import TableFilterSlidebar from '../../../components/table/TableFilterSlidebar';
 import { mediaBaseURL } from '../../../config';
 import useLocales from '../../../hooks/useLocales';
 import { getBills, setBillSearch } from '../../../redux/slices/sim/sim.bill';
-import BillItemMoreMenu from '../../../sections/sim/billItem/BillItemMoreMenu';
 import { deleteBillAPI, deleteBillsAPI } from '../../../service/sim/bill.service';
 
 // ----------------------------------------------------------------------
 
-export default function BillList() {
+export default function BillDetail() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const { id } = useParams();
   const { bills, totalElements, numberOfElements, search, error } = useSelector((state) => state.bill);
+  console.log(bills)
+
+  const bill = bills.find(c => c.id === parseInt(id, 10));
+  console.log(bill.billItems)
   const [selected, setSelected] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedId, setSelectedId] = useState();
@@ -60,12 +64,11 @@ export default function BillList() {
   const { translate } = useLocales();
   const TABLE_HEAD = [
     { id: 'id', label: translate('sim.bill.id'), alignRight: false, checked: false, sort: true },
-    { id: 'name', label: translate('media.user.name'), alignRight: false, checked: true, sort: true },
-    { id: 'roles', label: translate('media.user.roles'), alignRight: false, checked: false, sort: false },
-    { id: 'quantity', label: translate('sim.bill.quantity'), alignRight: false, checked: true, sort: false },
+    { id: 'name', label: translate('sim.product.name'), alignRight: false, checked: true, sort: true },
+    { id: 'description', label: translate('sim.product.description'), alignRight: false, checked: true, sort: true },
+    { id: 'category', label: translate('sim.category.name'), alignRight: false, checked: false, sort: false },
     { id: 'price', label: translate('sim.bill.price'), alignRight: false, checked: true, sort: false },
     { id: 'createdAt', label: translate('sim.bill.createdAt'), alignRight: false, checked: true, sort: true },
-    { id: '', label: translate('label.actions'), alignRight: true, checked: true, sort: false },
   ];
   // goi lai redux neu search thay doi
   useEffect(() => {
@@ -78,18 +81,9 @@ export default function BillList() {
 
   // sap xep
   const handleRequestSort = (property) => {
-    const isAsc = search.orders[0].property === property && search.orders[0].order === 'asc';
-    const order = isAsc ? 'desc' : 'asc';
-
     dispatch(
       setBillSearch({
         ...search,
-        orders: [
-          {
-            order,
-            property,
-          },
-        ],
       })
     );
   };
@@ -186,30 +180,25 @@ export default function BillList() {
     reset();
     handleCloseFilter();
   };
-  
+
   return (
-    <Page title={translate('sim.bill.listBill')}>
+    <Page title={`Bill ${bill?.id}`}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={translate('sim.bill.listBill')}
+          heading={`Bill ${bill?.id}`}
           links={[
             { name: translate('menu.dashboard'), href: PATH_DASHBOARD.root },
             {
               name: translate('menu.sim'),
               href: PATH_DASHBOARD.sim.bills,
             },
-            { name: translate('sim.bill.listBill') },
+            {
+              name: translate('sim.bill.listBill'),
+              href: PATH_DASHBOARD.sim.bills,
+            },
+            { name: `Bill ${bill?.id}` || '' },
           ]}
-          action={
-            <Button
-              variant="contained"
-              component={RouterLink}
-              to={PATH_DASHBOARD.sim.newBill}
-              startIcon={<Iconify icon={'eva:plus-fill'} />}
-            >
-              {translate('button.new')}
-            </Button>
-          }
+          
         />
 
         <FormProvider methods={methods}>
@@ -238,12 +227,12 @@ export default function BillList() {
                   headLabel={TABLE_HEAD.filter((head) => checkedColumns.indexOf(head.label) > -1)}
                   rowCount={numberOfElements}
                   numSelected={selected.length}
-                  onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
+                  // onRequestSort={handleRequestSort}
+                  // onSelectAllClick={handleSelectAllClick}
                 />
 
                 <TableBody>
-                  {bills.map((row) => {
+                  {bill.billItems.map((row) => {
                     const { id } = row;
                     const isItemSelected = selected.indexOf(id) !== -1;
                     return (
@@ -261,51 +250,37 @@ export default function BillList() {
                         {TABLE_HEAD.map((head) => {
                           if (checkedColumns.indexOf(head.label) === -1) return null;
 
-                          if (head.id === 'name')
-                          return <TableCell sx={{ display: 'flex', alignItems: 'center' }} key={head.id}>
-                          <Avatar alt={row.user.avatar} title={row.user.avatar} src={`${mediaBaseURL}/user/download/${row.user.avatar}`} sx={{ mr: 2, alignItems: 'center' }} />
-                          <Typography variant="subtitle2" noWrap>
-                            {row.user.name}
-                          </Typography>
-                        </TableCell>;
-                          
-                          if (head.id === 'roles')
-                            return <TableCell key={head.id}>
-                              {row.user.roles.map(r => r.name).join(',')}
-                            </TableCell>;
-
-                          if (head.id === 'quantity') {
-                            if (row.billItems && Array.isArray(row.billItems)) {
-                              const quantities = row.billItems.map(item => item.quantity).join(', ');
-                              return (
-                                <TableCell key={head.id}>
-                                  {quantities}
-                                </TableCell>
-                              );
-                            }
-                          }
-
-                          if (head.id === 'price') {
-                            if (row.billItems && Array.isArray(row.billItems)) {
-                              const prices = row.billItems.map(item => item.price).join(', ');
-                              return (
-                                <TableCell key={head.id}>
-                                  {prices}
-                                </TableCell>
-                              );
-                            }
-                          }
-
-                          if (head.id === '')
+                          if (head.id === 'name') {
                             return (
-                              <TableCell align="right" key={head.id}>
-                                <BillItemMoreMenu id={id}
-                                  pathEdit={`${PATH_DASHBOARD.sim.root}/bill/${id}/edit`}
-                                  pathView={`${PATH_DASHBOARD.sim.root}/bill/${id}/view`}
-                                  onDelete={() => handleDelete(id)}
-                                />
+                              <TableCell sx={{ display: 'flex', alignItems: 'center' }} key={head.id}>
+                                <Avatar alt={row.product.image} title={row.product.image} src={`${mediaBaseURL}/user/download/${row.product.image}`} sx={{ mr: 2, alignItems: 'center' }} />
+                                <Typography variant="subtitle2" noWrap>
+                                  {row.product.name}
+                                </Typography>
                               </TableCell>
                             );
+                          }
+                          if (head.id === 'description')
+                            return <TableCell key={head.id}>
+                              {row.product.description}
+                            </TableCell>;
+
+                          if (head.id === 'category')
+                            return <TableCell key={head.id}>
+                              {row.product.category.name}
+                            </TableCell>;
+
+                          if (head.id === 'price')
+                            return <TableCell key={head.id}>
+                              {row.product.price}
+                            </TableCell>;
+
+                          if (head.id === 'createdAt')
+                            return <TableCell key={head.id}>
+                              {row.product.createdAt}
+                            </TableCell>;
+
+                          
                           return <TableCell key={head.id}>{row[head.id]}</TableCell>;
                         })}
                       </TableRow>
@@ -339,15 +314,7 @@ export default function BillList() {
             </TableContainer>
           </Scrollbar>
 
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 50]}
-            component="div"
-            count={totalElements}
-            rowsPerPage={search.size}
-            page={search.currentPage}
-            onPageChange={(event, value) => handleChangePage(value)}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+
         </Card>
 
         <ConfirmDialog
