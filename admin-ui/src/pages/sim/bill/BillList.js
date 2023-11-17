@@ -195,7 +195,7 @@ export default function BillList() {
           links={[
             { name: translate('menu.dashboard'), href: PATH_DASHBOARD.root },
             {
-              name: translate('menu.sim'),
+              name: translate('menu.management'),
               href: PATH_DASHBOARD.sim.bills,
             },
             { name: translate('sim.bill.listBill') },

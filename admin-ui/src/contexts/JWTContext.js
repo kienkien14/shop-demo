@@ -127,9 +127,9 @@ function AuthProvider({ children }) {
 
   const register = async (request) => {
     const response = await signUpAPI(request);
-    const { code, data, message } = response;
-    if (code !== '200') {
-      throw message;
+    const { status, data, msg } = response;
+    if (status !== 200) {
+      throw msg;
     } else {
       const { accessToken, refreshToken, user } = data;
       setSession(accessToken, refreshToken);

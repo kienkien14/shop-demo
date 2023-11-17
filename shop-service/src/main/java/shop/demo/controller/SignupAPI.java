@@ -22,7 +22,7 @@ public class SignupAPI {
 
     final String UPLOAD_FOLDER = "D:\\BackEnd\\image\\";
 
-    @PostMapping("/createMember")
+    @PostMapping("/signup")
     public ResponseDTO<UserDTO> createMember(@RequestBody @Valid UserDTO userDTO) throws IllegalStateException, IOException {
         userDTO.setRoles(Arrays.asList(new RoleDTO(3)));
         userService.create(userDTO);

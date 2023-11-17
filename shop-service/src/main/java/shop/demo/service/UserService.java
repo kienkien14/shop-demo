@@ -178,8 +178,8 @@ class UserServiceImple implements UserService {
 
     @Override
     @Transactional
-    public boolean forgotPassword(String username) {
-        User user = userRepo.findByUsername(username);
+    public boolean forgotPassword(String email) {
+        User user = userRepo.findByEmail(email);
         if (user == null) {
             System.out.println("Không tìm thấy người dùng với email này!");
             return false;

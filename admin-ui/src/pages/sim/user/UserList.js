@@ -183,10 +183,10 @@ export default function MediaUserList() {
           links={[
             { name: translate('menu.dashboard'), href: PATH_DASHBOARD.root },
             {
-              name: translate('menu.sim'),
+              name: translate('menu.user'),
               href: PATH_DASHBOARD.sim.users,
             },
-            { name: translate('menu.user') },
+            { name: translate('media.user.listAccount') },
           ]}
           action={
             <Button

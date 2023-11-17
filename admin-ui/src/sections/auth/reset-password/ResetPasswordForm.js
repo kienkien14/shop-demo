@@ -11,6 +11,7 @@ import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import { FormProvider, RHFTextField } from '../../../components/hook-form';
 import useLocales from '../../../hooks/useLocales';
+import { resetMediaUserPasswordAPI } from '../../../service/sim/user.service';
 
 // ----------------------------------------------------------------------
 
@@ -41,6 +42,9 @@ export default function ResetPasswordForm({ onSent, onGetEmail }) {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
       if (isMountedRef.current) {
+        const formData = new FormData();
+        formData.append('email', `${data.email}`);
+        await resetMediaUserPasswordAPI(formData)
         onSent();
         onGetEmail(data.email);
       }
@@ -54,7 +58,6 @@ export default function ResetPasswordForm({ onSent, onGetEmail }) {
       <Stack spacing={3}>
         <RHFTextField name="email"
           label={translate("media.user.username")}
-
         />
 
         <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>

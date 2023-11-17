@@ -32,7 +32,7 @@ export default function GeneralAnalytics() {
     <Page title={translate('menu.dashboard')}>
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Chào mừng bạn đến với SIM68.NET !
+          Chào mừng trở lại !
         </Typography>
 
         <Grid container spacing={3}>

@@ -40,7 +40,6 @@ export default function MediaCategoryList() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { categories, totalElements, numberOfElements, search, error } = useSelector((state) => state.category);
-  console.log(categories)
   const [selected, setSelected] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedId, setSelectedId] = useState();
@@ -180,7 +179,7 @@ export default function MediaCategoryList() {
               name: translate('menu.management'),
               href: PATH_DASHBOARD.sim.categories,
             },
-            { name: translate('menu.category') },
+            { name: translate('media.user.listAccount') },
           ]}
           action={
             <Button

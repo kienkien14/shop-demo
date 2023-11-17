@@ -96,7 +96,7 @@ export const updateMediaUserPasswordAPI = async (data) => {
 
 export const resetMediaUserPasswordAPI = async (data) => {
   const config = {
-    url: '/user/reset/password',
+    url: '/forgot-pass/',
     method: 'PUT',
     data,
   };

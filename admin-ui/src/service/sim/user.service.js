@@ -63,14 +63,13 @@ export const updateMediaUserPasswordAPI = async (data) => {
   return handleRequest(config);
 };
 
-export const resetMediaUserPasswordAPI = async (username) => {
-  const urlencoded = new URLSearchParams();
-  urlencoded.append("username", username);
+export const resetMediaUserPasswordAPI = async (data) => {
   const config = {
-    method: 'put',
     url: '/forgot-pass',
-    data: urlencoded
+    method: 'PUT',
+    data,
   };
+
   return handleRequest(config);
 };
 

@@ -49,8 +49,8 @@ public class LoginAPI {
 
     @PutMapping("/forgot-pass")
 	public ResponseDTO<Void> forgotPassword(
-			@RequestParam("username") String username) {
-		boolean userFound = userService.forgotPassword(username);
+			@RequestParam("email") String email) {
+		boolean userFound = userService.forgotPassword(email);
 
 		if (userFound) {
 			return ResponseDTO.<Void>builder().status(200).msg("Forgot Password Ok").build();

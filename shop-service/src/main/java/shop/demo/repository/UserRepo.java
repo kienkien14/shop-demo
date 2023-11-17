@@ -16,7 +16,7 @@ public interface UserRepo
 	//select user where username = ?
 	User findByUsername(String username);
 
-
+	User findByEmail(String email);
 
 	// tim nguoi dung theo ngay sinh nhat
 	@Query("SELECT u FROM User u WHERE "

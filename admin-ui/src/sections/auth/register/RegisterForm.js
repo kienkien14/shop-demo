@@ -52,7 +52,7 @@ export default function RegisterForm() {
 
   const onSubmit = async (data) => {
     try {
-      await register(data.name, data.username, data.email, data.password,);
+      await register(data);
     } catch (error) {
       console.error(error);
       reset();
